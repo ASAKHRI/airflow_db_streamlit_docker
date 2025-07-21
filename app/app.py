@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 
-db_path = "../db/data.db"
+db_path = "/app/db/data.db"
 
 
 

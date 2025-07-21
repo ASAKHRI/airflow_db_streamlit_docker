@@ -4,7 +4,7 @@ import sqlite3
 import os
 
 def nettoyage_colonnes(df):
-    cols = ["athlete_nom", "athlete_prenom", "equipe_en", "federation", "epreuve", "annee", "mois", "jour"]
+    cols = ["athlete_nom", "athlete_prenom", "equipe_en", "federation", "epreuve"]
     df = df[cols]
     df = df.rename(columns={"athlete_nom": "nom", "athlete_prenom": "prenom", "equipe_en": "equipe"})
     df["nom"] = df["nom"].str.upper()
@@ -18,7 +18,7 @@ def fillna(df):
     return df
 
 
-def load_to_sqlite(df,db_path="../db/data.db"):
+def load_to_sqlite(df,db_path="/opt/airflow//db/data.db"):
     os.makedirs(os.path.dirname(db_path), exist_ok=True)
     conn = sqlite3.connect(db_path)
     df.to_sql("epreuve_sportives", conn, if_exists="replace", index=False)
@@ -26,7 +26,7 @@ def load_to_sqlite(df,db_path="../db/data.db"):
     print("les données sont insérées dans la table epreuve_sportives")
 
 def main():
-    files = glob.glob("../data/*.csv")
+    files = glob.glob("/opt/airflow/data/*.csv")
     if not files:
         raise FileNotFoundError ("pas de fichiers csv trouvés dans le dossier data")
         
