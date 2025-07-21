@@ -1,2 +1,5 @@
 virtualEnv/
 data/
+preparation_donnees/
+*.pyc
+__pycache__/
