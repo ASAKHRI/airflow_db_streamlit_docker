@@ -1,0 +1,33 @@
+services:
+  airflow:
+    image: apache/airflow:2.8.1
+    container_name: airflow
+    restart: always
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor 
+      - AIRFLOW__CORE__DAGS__ARE__PAUSED8_AT_CREATION=False
+      - AIRFLOW__CORE__LOAD__EXAMPLES=False
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./etl:/opt/airflow/etl
+      - ./data:/opt/airflow/data
+      - .db:/opt/airflow/db
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+        airflow db init &&
+        airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin &&
+        airflow scheduler &
+        exec airflow webserver
+      "
+  streamlit:
+    build:
+      context: ./app
+    container_name: streamlit
+    volumes:
+      - ./db:/app/db
+    ports:
+      - "8501:8501"
+    depends_on:
+      - airflow
